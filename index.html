@@ -1,385 +1,701 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Bookstore</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <style>
-    body {
-      box-sizing: border-box;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Salman ahmad] - Frontend Web Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+        /* ============================== */
+        /* 1. Global & Variables */
+        /* ============================== */
+        :root {
+            --primary-color: #007bff; /* नीला एक्सेंट कलर */
+            --secondary-color: #333333;
+            --background-color: #f4f7fa;
+            --text-color: #555555;
+            --font-family: 'Poppins', sans-serif;
+        }
 
-    html, body, .bookstore-wrapper {
-      height: 100%;
-      width: 100%;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .bookstore-wrapper {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      font-family: 'Georgia', serif;
-      overflow-auto;
-      padding: 2rem;
-    }
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: white;
+            scroll-behavior: smooth;
+        }
 
-    .bookstore-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+        h1, h2, h3 {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
 
-    .header {
-      text-align: center;
-      margin-bottom: 3rem;
-      color: white;
-    }
+        section {
+            padding: 100px 5%;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .store-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
+        /* Utility Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px 10px 0;
+            font-size: 0.95em;
+        }
 
-    .store-tagline {
-      font-size: 1.2rem;
-      opacity: 0.9;
-      font-style: italic;
-    }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+        }
 
-    .search-container {
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: center;
-    }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
 
-    .search-box {
-      width: 100%;
-      max-width: 600px;
-      padding: 1rem 1.5rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 50px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      outline: none;
-      font-family: 'Georgia', serif;
-    }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
 
-    .search-box:focus {
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
+        /* Section Heading Style */
+        .section-heading {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+        }
 
-    .books-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
-    }
+        /* ============================== */
+        /* 2. Header & Navigation (FIXED FOR SLIDE-OUT) */
+        /* ============================== */
+        header {
+            background: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    .book-card {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
 
-    .book-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-    .book-cover {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-    }
+        nav a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Mobile Menu Toggle Button */
+        .menu-toggle {
+            display: none; /* Hide by default on desktop */
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--secondary-color);
+            z-index: 1001; /* Ensure button is above the menu */
+        }
 
-    .book-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #2d3748;
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-    }
 
-    .book-author {
-      font-size: 1rem;
-      color: #718096;
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
+        @media (max-width: 768px) {
+            /* Show hamburger icon on mobile */
+            .menu-toggle {
+                display: block; 
+            }
+            
+            /* Off-Canvas Menu Properties */
+            nav {
+                display: flex; /* Always display but control visibility with transform */
+                flex-direction: column;
+                
+                position: fixed; /* Fixed position relative to viewport */
+                top: 0;
+                right: 0;
+                width: 280px; /* Menu Width */
+                height: 100%; /* Full screen height */
+                background-color: white;
+                box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                padding-top: 80px; /* Space for the header */
+                
+                /* Initial state: Pushed off the screen to the right */
+                transform: translateX(100%);
+                transition: transform 0.4s ease-in-out; /* Smooth sliding transition */
+            }
+            
+            /* Active state: Slide into view (translateX(0)) */
+            nav.active {
+                transform: translateX(0);
+            }
 
-    .book-description {
-      font-size: 0.9rem;
-      color: #4a5568;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
+            nav a {
+                margin: 0;
+                padding: 15px 20px;
+                text-align: left;
+                border-bottom: 1px solid var(--background-color);
+            }
+            nav a:last-child {
+                border-bottom: none;
+            }
+            /* Hero Section adjustments */
+            .hero-section {
+                background: white;
+                text-align: center;
+                min-height: auto;
+                padding-bottom: 50px;
+            }
+            .hero-content {
+                flex-direction: column-reverse;
+            }
+            .hero-image-container {
+                margin-bottom: 40px;
+            }
+            /* About Section adjustments */
+            .about-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .about-image {
+                margin-bottom: 30px;
+            }
+            .about-text {
+                text-align: left; /* Keep text left aligned for readability */
+            }
+        }
+        
+        /* ============================== */
+        /* 3. Hero Section */
+        /* ============================== */
+        .hero-section {
+            background: linear-gradient(to right, white 60%, var(--background-color) 40%);
+            display: flex;
+            align-items: center;
+            min-height: 90vh;
+        }
+        
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
 
-    .book-price {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #667eea;
-    }
+        .hero-text {
+            max-width: 550px;
+            padding-right: 20px;
+        }
 
-    .no-results {
-      text-align: center;
-      color: white;
-      font-size: 1.5rem;
-      margin-top: 3rem;
-      opacity: 0.9;
-    }
-  </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body>
-  <div class="bookstore-wrapper">
-   <div class="bookstore-container">
-    <header class="header">
-     <h1 class="store-title" id="storeTitle">The Book Haven</h1>
-     <p class="store-tagline" id="storeTagline">Discover Your Next Great Read</p>
-    </header>
-    <div class="search-container"><input type="text" class="search-box" id="searchBox" placeholder="Search books by title or author..." aria-label="Search books">
-    </div>
-    <div class="books-grid" id="booksGrid"></div>
-    <div class="no-results" id="noResults" style="display: none;">
-     No books found matching your search.
-    </div>
-   </div>
-  </div>
-  <script>
-    const books = [
-      {
-        title: "The Midnight Library",
-        author: "Matt Haig",
-        description: "A dazzling novel about all the choices that go into a life well lived.",
-        price: "$16.99",
-        emoji: "📚"
-      },
-      {
-        title: "Where the Crawdads Sing",
-        author: "Delia Owens",
-        description: "A mysterious and moving story of a young girl who raised herself in the marshes.",
-        price: "$18.99",
-        emoji: "🦋"
-      },
-      {
-        title: "Atomic Habits",
-        author: "James Clear",
-        description: "An easy and proven way to build good habits and break bad ones.",
-        price: "$14.99",
-        emoji: "⚡"
-      },
-      {
-        title: "The Silent Patient",
-        author: "Alex Michaelides",
-        description: "A gripping psychological thriller about a woman who stops speaking.",
-        price: "$15.99",
-        emoji: "🤫"
-      },
-      {
-        title: "Educated",
-        author: "Tara Westover",
-        description: "A memoir about a young woman who leaves her survivalist family.",
-        price: "$17.99",
-        emoji: "🎓"
-      },
-      {
-        title: "The Seven Husbands of Evelyn Hugo",
-        author: "Taylor Jenkins Reid",
-        description: "A legendary film actress tells the story of her glamorous life.",
-        price: "$16.99",
-        emoji: "⭐"
-      },
-      {
-        title: "Sapiens",
-        author: "Yuval Noah Harari",
-        description: "A brief history of humankind from the Stone Age to the modern age.",
-        price: "$19.99",
-        emoji: "🌍"
-      },
-      {
-        title: "The Song of Achilles",
-        author: "Madeline Miller",
-        description: "A retelling of the Trojan War through the eyes of Patroclus.",
-        price: "$15.99",
-        emoji: "⚔️"
-      },
-      {
-        title: "Becoming",
-        author: "Michelle Obama",
-        description: "An intimate memoir by the former First Lady of the United States.",
-        price: "$20.99",
-        emoji: "🌟"
-      }
-    ];
+        .hero-text h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .hero-text h1 span {
+            color: var(--primary-color);
+        }
 
-    let allBooks = [...books];
-    let filteredBooks = [...books];
+        .hero-image-container {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 10px solid white;
+        }
 
-    const defaultConfig = {
-      store_title: "The Book Haven",
-      store_tagline: "Discover Your Next Great Read",
-      search_placeholder: "Search books by title or author...",
-      background_gradient_start: "#667eea",
-      background_gradient_end: "#764ba2",
-      card_background: "#ffffff",
-      title_color: "#2d3748",
-      author_color: "#718096",
-      price_color: "#667eea"
-    };
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* ============================== */
+        /* 4. About Me Section */
+        /* ============================== */
+        .about-section {
+            background-color: white;
+        }
 
-    function renderBooks() {
-      const booksGrid = document.getElementById('booksGrid');
-      const noResults = document.getElementById('noResults');
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 50px;
+        }
 
-      if (filteredBooks.length === 0) {
-        booksGrid.style.display = 'none';
-        noResults.style.display = 'block';
-        return;
-      }
+        .about-image {
+            min-width: 350px;
+            height: 350px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
-      booksGrid.style.display = 'grid';
-      noResults.style.display = 'none';
-      
-      booksGrid.innerHTML = filteredBooks.map(book => `
-        <div class="book-card">
-          <div class="book-cover">${book.emoji}</div>
-          <h2 class="book-title">${book.title}</h2>
-          <p class="book-author">by ${book.author}</p>
-          <p class="book-description">${book.description}</p>
-          <div class="book-price">${book.price}</div>
+        .about-text {
+            flex-grow: 1;
+        }
+
+        .about-text h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .technical-points {
+            margin-top: 20px;
+        }
+
+        .technical-points ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .technical-points ul li {
+            background: var(--background-color);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 500;
+            color: var(--secondary-color);
+            transition: background 0.3s;
+        }
+        
+        .technical-points ul li i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        /* 5. Skills Section */
+        .skills-section {
+            background-color: var(--background-color);
+            text-align: center;
+        }
+
+        .skills-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .skill-group {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            width: 30%;
+            min-width: 280px;
+            margin: 10px;
+        }
+
+        .skill-group h3 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .skill-group ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .skill-group ul li i {
+            color: var(--primary-color);
+            margin-right: 5px;
+        }
+        
+        /* 6. Projects Section */
+        .projects-section {
+            text-align: center;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: left;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-card-content {
+            padding: 20px;
+        }
+
+        .project-card-content strong {
+            font-size: 1.3em;
+            color: var(--primary-color);
+        }
+        
+        .project-card-content .tech-stack {
+            display: block;
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        /* 7. Education Section */
+        .ed-cert-section {
+            background-color: var(--background-color);
+            text-align: center;
+        }
+        
+        .info-block {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        
+        .info-block strong {
+            display: block;
+            font-size: 1.1em;
+            color: var(--primary-color);
+        }
+
+        /* ============================== */
+        /* 8. Contact Section */
+        /* ============================== */
+        .contact-section {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 80px 5%;
+        }
+
+        .contact-section h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .contact-section p {
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .contact-card {
+            background: #444;
+            padding: 20px 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        
+        .contact-card:hover {
+            background: #555;
+        }
+
+        .contact-card i {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .contact-card a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #ddd;
+            text-align: center;
+            padding: 20px 5%;
+        }
+        
+        .footer-links a {
+            color: white;
+            font-size: 1.5em;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#home" class="logo">[SALMAN]</a>
+        <nav id="main-nav">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="menu-toggle" id="toggle-button">
+            <i class="fas fa-bars"></i>
         </div>
-      `).join('');
-    }
+    </header>
 
-    function handleSearch(event) {
-      const searchTerm = event.target.value.toLowerCase().trim();
-      
-      if (searchTerm === '') {
-        filteredBooks = [...allBooks];
-      } else {
-        filteredBooks = allBooks.filter(book => 
-          book.title.toLowerCase().includes(searchTerm) || 
-          book.author.toLowerCase().includes(searchTerm)
-        );
-      }
-      
-      renderBooks();
-    }
+    <section id="home" class="hero-section">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <p>Hello, I am Salman</p>
+                <h1>Salman Ahmad <span>Web Developer</span></h1>
+                <p>Hi, I’m **[Salman Ahmad]**, a passionate and detail-oriented Frontend Web
+                     Developer currently pursuing BCA. I enjoy creating clean, responsive, and
+                      user-friendly websites using the latest technologies.</p>
+                <div class="hero-actions">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#about" class="btn btn-secondary">More About Me</a>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <img src="portsalll.jpg" alt="Your Profile Picture" class="hero-image">
+            </div>
+        </div>
+    </section>
+    
+    <section id="about" class="about-section">
+        <h2 class="section-heading">About Me</h2>
+        <div class="container about-content">
+            <img src="certificate.png" alt="Coding Environment" class="about-image">
+            
+            <div class="about-text">
+                <h3>Hi, I'm Salman Ahmad — a passionate Front-End Web Developer.</h3>
+                <p>I specialize in building responsive, user-friendly, and visually appealing
+                     websites using HTML, CSS, JavaScript, and modern frameworks. I enjoy turning 
+                     ideas into clean and efficient code while focusing on performance, UI/UX, and
+                      best development practices.</p>
+                
+                <div class="technical-points">
+                    <p style="font-weight: 600; margin-bottom: 10px; color: var(--secondary-color);">My Technical Edge:</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i>Strong command of HTML, CSS, JavaScript</li>
+                        <li><i class="fas fa-check-circle"></i>Fast learning ability and strong debugging skills</li>
+                        <li><i class="fas fa-check-circle"></i>Clean, responsive, mobile-friendly UI design</li>
+                        <li><i class="fas fa-check-circle"></i>Ability to write optimized and structured code</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    async function onConfigChange(config) {
-      const storeTitle = document.getElementById('storeTitle');
-      const storeTagline = document.getElementById('storeTagline');
-      const searchBox = document.getElementById('searchBox');
-      const wrapper = document.querySelector('.bookstore-wrapper');
-      const bookCards = document.querySelectorAll('.book-card');
-      const bookTitles = document.querySelectorAll('.book-title');
-      const bookAuthors = document.querySelectorAll('.book-author');
-      const bookPrices = document.querySelectorAll('.book-price');
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <h2 class="section-heading">My Skillset</h2>
+            <div class="skills-container">
+                
+                <div class="skill-group">
+                    <h3>Frontend Development</h3>
+                    <ul>
+                        <li><i class="fas fa-code"></i> HTML5 & CSS3 (Flexbox, Grid)</li>
+                        <li><i class="fab fa-js"></i> JavaScript (ES6+)</li>
+                        <li><i class="fas fa-mobile-alt"></i> Responsive Web Design</li>
+                        <li><i class="fab fa-bootstrap"></i> Bootstrap / Tailwind CSS</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-group">
+                    <h3>Additional & Tools</h3>
+                    <ul>
+                        <li><i class="fab fa-github"></i> Git & GitHub</li>
+                        <li><i class="fas fa-lightbulb"></i> Basic UI/UX Knowledge</li>
+                        <li><i class="fas fa-wrench"></i> Debugging & Browser DevTools</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-group">
+                    <h3>Currently Learning</h3>
+                    <ul>
+                        <li><i class="fab fa-react"></i> React.js</li>
+                        <li><i class="fas fa-database"></i> API Integration</li>
+                        <li><i class="fas fa-server"></i> Backend Basics (Node.js)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      storeTitle.textContent = config.store_title || defaultConfig.store_title;
-      storeTagline.textContent = config.store_tagline || defaultConfig.store_tagline;
-      searchBox.placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <h2 class="section-heading">My Projects</h2>
+            <div class="projects-grid">
+                
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <strong>Personal Portfolio Website</strong>
+                        <span class="tech-stack">Tech: HTML, CSS, JavaScript</span>
+                        <p>A clean and responsive website showcasing my skills, projects, and contact details. Optimized for performance.</p>
+                        <a href="#" class="btn btn-primary" style="padding: 8px 15px;">View Live</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <strong>Responsive Landing Page</strong>
+                        <span class="tech-stack">Tech: HTML, CSS (Flexbox, Grid)</span>
+                        <p>Designed a product landing page with modern UI and mobile-friendly layout, demonstrating responsive design mastery.</p>
+                        <a href="#" class="btn btn-primary" style="padding: 8px 15px;">View Live</a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <strong>Calculator Web App</strong>
+                        <span class="tech-stack">Tech: HTML, CSS, JavaScript</span>
+                        <p>A fully functional calculator with basic operations, built to practice DOM manipulation and event handling in JS.</p>
+                        <a href="#" class="btn btn-primary" style="padding: 8px 15px;">View Live</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
 
-      wrapper.style.background = `linear-gradient(135deg, ${config.background_gradient_start || defaultConfig.background_gradient_start} 0%, ${config.background_gradient_end || defaultConfig.background_gradient_end} 100%)`;
+    <section id="education" class="ed-cert-section">
+        <div class="container">
+            <h2 class="section-heading">Education & Certifications</h2>
+            
+            <div class="info-block">
+                <strong>Bachelor of Computer Applications (BCA)</strong>
+                <p>[Vision Group of Institution] — [2024-26 Batch] to Present</p>
+            </div>
 
-      bookCards.forEach(card => {
-        card.style.background = config.card_background || defaultConfig.card_background;
-      });
+            <div class="info-block">
+                <strong>Web Development Fundamentals</strong>
+                <p>Certification from [DevSkill Academy] — Demonstrating core concepts in web engineering.</p>
+            </div>
+            
+        </div>
+    </section>
+    
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 style="color: white;">Let's Build Something Great Together</h2>
+            <p>I'm available for freelance work, collaboration, and full-time opportunities. Reach out to discuss your project or just to say hello!</p>
+            
+            <div class="contact-links">
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <p style="color: #ddd;">Email Me Directly</p>
+                    <a href="mailto:salmanahmad66962@gmail.com">salmanahmad66962@gmail.com</a>
+                </div>
+                
+                <div class="contact-card">
+                    <i class="fab fa-linkedin-in"></i>
+                    <p style="color: #ddd;">Connect on LinkedIn</p>
+                    <a href="https://www.linkedin.com/in/salman-ahmad-576739357?utm_source=share&utm_
+                    campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">linkedin.com/in/salman-ahmad</a>
+                </div>
+                
+                <div class="contact-card">
+                    <i class="fab fa-github"></i>
+                    <p style="color: #ddd;">View My Code</p>
+                    <a href="https://github.com/salman123-ji/sal.txt.git" target="_blank">github.com/salman123-ji</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p style="font-size: 0.8em;">&copy; 2025 [salman]. Crafted with <i class="fas fa-heart" style="color: red;"></i> and Code.</p>
+        </div>
+    </footer>
 
-      bookTitles.forEach(title => {
-        title.style.color = config.title_color || defaultConfig.title_color;
-      });
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggle-button');
+            const navMenu = document.getElementById('main-nav');
+            const navLinks = navMenu.querySelectorAll('a');
 
-      bookAuthors.forEach(author => {
-        author.style.color = config.author_color || defaultConfig.author_color;
-      });
+            // 1. Mobile Menu Toggle Logic
+            toggleButton.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
 
-      bookPrices.forEach(price => {
-        price.style.color = config.price_color || defaultConfig.price_color;
-      });
-    }
+            // 2. Smooth Scrolling and Close Menu Logic
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close the mobile menu after clicking a link
+                    // This ensures the menu slides back when navigating
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
 
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.background_gradient_start || defaultConfig.background_gradient_start,
-            set: (value) => {
-              config.background_gradient_start = value;
-              window.elementSdk.setConfig({ background_gradient_start: value });
-            }
-          },
-          {
-            get: () => config.background_gradient_end || defaultConfig.background_gradient_end,
-            set: (value) => {
-              config.background_gradient_end = value;
-              window.elementSdk.setConfig({ background_gradient_end: value });
-            }
-          },
-          {
-            get: () => config.card_background || defaultConfig.card_background,
-            set: (value) => {
-              config.card_background = value;
-              window.elementSdk.setConfig({ card_background: value });
-            }
-          },
-          {
-            get: () => config.title_color || defaultConfig.title_color,
-            set: (value) => {
-              config.title_color = value;
-              window.elementSdk.setConfig({ title_color: value });
-            }
-          },
-          {
-            get: () => config.price_color || defaultConfig.price_color,
-            set: (value) => {
-              config.price_color = value;
-              window.elementSdk.setConfig({ price_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      };
-    }
+</body>
 
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ["store_title", config.store_title || defaultConfig.store_title],
-        ["store_tagline", config.store_tagline || defaultConfig.store_tagline],
-        ["search_placeholder", config.search_placeholder || defaultConfig.search_placeholder]
-      ]);
-    }
-
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-
-    document.getElementById('searchBox').addEventListener('input', handleSearch);
-
-    renderBooks();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b7a61a076998fbf',t:'MTc2NzM1ODIxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
